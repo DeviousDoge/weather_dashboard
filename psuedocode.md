@@ -11,9 +11,9 @@ SO THAT I can plan a trip accordingly
 ```
 GIVEN a weather dashboard with form inputs
 WHEN I search for a city
-    //Do i need some kind of form inpout?
+    //Do i need some kind of form input?
        //if i am using a form did i preventDefault()
-    //Need a bbutton for click/submit eventlistener
+    //Need a button for click/submit eventlistener
 
     //fetch OpenWeatherAPI
 

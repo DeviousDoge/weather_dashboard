@@ -42,7 +42,9 @@ main {
    width: 100%;
     padding: 2.5%;
     margin: 0 0 20px 0;
-    border: 3px solid rgb(0, 140, 255);
+    background-color: darkcyan;
+    color: white;
+    border: 3px solid darkblue;
 
 }
 .city-name {

@@ -31,7 +31,7 @@ var citySearchInput = function(event) {
     event.preventDefault();
     //makes the city query parameter in the openweathmap API equal to the userinput 
     city = searchInput.val();
-    var queryURL ="http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
+    var queryURL ="https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
    console.log(queryURL);
     //using AJAX and jquery to make this less painful
     $.ajax({
@@ -43,6 +43,9 @@ var citySearchInput = function(event) {
         var tempF = (response.main.temp - 273.15) * 1.80 + 32;
         //setting component of todays weather in city header card
         cityName.html(response.name);
+        var icon = response.weather[0].icon;
+        var iconURL = "https://openweathermap.org/img/wn/"+icon+".png";
+        $('.todays-weather').html("<img src="+iconURL+">");
         $('.todays-temp').html('Temp(F): ' + (tempF).toFixed(1));
         $('.todays-wind').html('Wind: ' + response.wind.speed + 'mph' );
         $('.todays-humidity').html('Humidity: ' + response.main.humidity);
@@ -54,7 +57,7 @@ var citySearchInput = function(event) {
         userCities.append(newCityBtn);
         //run code to fetch the data to populate the five forecast cards in a nested function
         cityForecast(response.id);
-
+        //UVIndex is called here using onecall API. Lat and Long are pulled from this API response. This single API response is responsible for two other API responses. 
         UVIndex(response.coord.lon, response.coord.lat);
         //set Store the city name in a number starting at one and incrementing each time this function is called until page is refreshed.
         keyNum++;
@@ -70,7 +73,7 @@ var cityDataPopulate = function(event) {
   city = event.target.textContent;
   console.log(city)
   //much of the code is then repeated from the last function but no button is spawned and no data is added to local storage
-  var queryURL ="http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
+  var queryURL ="https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
  console.log(queryURL);
   $.ajax({
       url: queryURL,
@@ -79,6 +82,9 @@ var cityDataPopulate = function(event) {
       console.log(response);
       var tempF = (response.main.temp - 273.15) * 1.80 + 32;
       cityName.html(response.name);
+      var icon = response.weather[0].icon;
+      var iconURL = "https://openweathermap.org/img/wn/"+icon+".png";
+      $('.todays-weather').html("<img src="+iconURL+">");
       $('.todays-temp').html('Temp(F): ' + (tempF).toFixed(1));
       $('.todays-wind').html('Wind: ' + response.wind.speed + 'mph' );
       $('.todays-humidity').html('Humidity: ' + response.main.humidity);
@@ -87,9 +93,8 @@ var cityDataPopulate = function(event) {
     });
 };
 };
-
+//function responsible for gathering UVIndex and timezone using onecall API
 function UVIndex(lon,lat){
-  // response.current.uvi
   var uvURL= 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&appid=' + APIkey ;
   $.ajax({
           url: uvURL,
@@ -98,17 +103,24 @@ function UVIndex(lon,lat){
             console.log(response);
             var UVIndexKey = response.current.uvi;
               $('.todays-uv').html(UVIndexKey);
+              //UVI risk analysis
               if (UVIndexKey < 3){
+                //low risk
                 $('.todays-uv').attr('style', 'background-color:green');
               } else if (UVIndexKey >= 3 && UVIndexKey<= 5) {
+                //moderate risk
                 $('.todays-uv').attr('style', 'background-color:yellow');
               } else if (UVIndexKey >= 6 && UVIndexKey <= 7) {
+                //high risk
                 $('.todays-uv').attr('style', 'background-color:orange');
               } else if (UVIndexKey >= 8 && UVIndexKey <= 10) {
+                //very high risk
                 $('.todays-uv').attr('style', 'background-color:red');
               } else if (UVIndexKey >= 11) {
+                //extreme risk
                 $('.todays-uv').attr('style', 'background-color:violet');
               };
+              //timezone query
               $('#timezone-span').html(response.timezone);
           });
 };

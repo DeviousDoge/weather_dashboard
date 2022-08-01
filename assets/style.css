@@ -5,32 +5,38 @@ body {
 
 main {
     display:flex;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     flex-direction: row;
 }
 
 .search {
-  
+    min-width: 250px;
     padding: 2.5%;
     margin: 0 0 20px 0;
     border: 3px solid rgb(0, 140, 255);
 
 }
 .cities {
-       
+    min-width: 250px;
     padding: 2.5%;
     margin: 0 0 20px 0;
     border: 3px solid rgb(0, 140, 255);
    
     
 }
+
 .forecast {
-    padding: 2.5%;
+    padding: 20px;
     margin: 20px;
     color: white;
+    min-width: 200px;
     background-color: darkblue;
     border: 3px solid rgb(0, 140, 255);
    
+}
+.projected li{
+    text-align: left;
+    font-size: 16px;
 }
 .city-header {
    width: 100%;
@@ -87,4 +93,40 @@ main {
     display: inline-block;
     width: 100%;
     box-shadow: 6px 5px gray;
+  }
+ 
+  @media only screen and (max-width:1150px) {
+    main {
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+    }
+    /* .right-screen {
+       display: flex;
+       flex-direction: column;
+       
+       
+    } */
+
+    .search {
+        min-width: none;
+        margin-right: 200px;
+        width: 100%;
+    }
+    
+    .city-header {
+       max-height: fit-content;
+       max-width: 600px;
+       /* margin: auto; */
+    }
+    .cities {
+    display: none;
+    }
+  }
+
+  @media only screen and (max-width:654px) {
+    .forecast {
+        width: 100%;
+    }
   }

@@ -54,6 +54,8 @@ var citySearchInput = function(event) {
         userCities.append(newCityBtn);
         //run code to fetch the data to populate the five forecast cards in a nested function
         cityForecast(response.id);
+
+        UVIndex(response.coord.lon, response.coord.lat);
         //set Store the city name in a number starting at one and incrementing each time this function is called until page is refreshed.
         keyNum++;
         console.log(keyNum);
@@ -81,9 +83,36 @@ var cityDataPopulate = function(event) {
       $('.todays-wind').html('Wind: ' + response.wind.speed + 'mph' );
       $('.todays-humidity').html('Humidity: ' + response.main.humidity);
       cityForecast(response.id);
+      UVIndex(response.coord.lon, response.coord.lat);
     });
 };
 };
+
+function UVIndex(lon,lat){
+  // response.current.uvi
+  var uvURL= 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&appid=' + APIkey ;
+  $.ajax({
+          url: uvURL,
+          method:'GET'
+          }).then(function(response){ 
+            console.log(response);
+            var UVIndexKey = response.current.uvi;
+              $('.todays-uv').html(UVIndexKey);
+              if (UVIndexKey < 3){
+                $('.todays-uv').attr('style', 'background-color:green');
+              } else if (UVIndexKey >= 3 && UVIndexKey<= 5) {
+                $('.todays-uv').attr('style', 'background-color:yellow');
+              } else if (UVIndexKey >= 6 && UVIndexKey <= 7) {
+                $('.todays-uv').attr('style', 'background-color:orange');
+              } else if (UVIndexKey >= 8 && UVIndexKey <= 10) {
+                $('.todays-uv').attr('style', 'background-color:red');
+              } else if (UVIndexKey >= 11) {
+                $('.todays-uv').attr('style', 'background-color:violet');
+              };
+              $('#timezone-span').html(response.timezone);
+          });
+};
+
 //fetch data from openweathermaps 40 day forecast API instead of using onecall
 function cityForecast(cityid) {
   //(cityid) is pulled from openweathermaps initial response from  the 'id' property when this function is called in that response.
